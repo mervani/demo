@@ -14,8 +14,8 @@ COPY --from=builder /tmp/src/target/*.jar /deployments/
 
 USER root
 
-RUN microdnf -y update-minimal --security --sec-severity=Important --sec-severity=Critical && \
-    microdnf clean all
+RUN dnf -y update-minimal --security --sec-severity=Important --sec-severity=Critical && \
+    dnf clean all
 
 #RUN chown -R 1001:0 /deployments && \
 #    chmod -R g=u /deployments

@@ -12,23 +12,25 @@ FROM registry.access.redhat.com/ubi8/openjdk-11:1.18
 
 COPY --from=builder /tmp/src/target/*.jar /deployments/
 
-USER root
+#USER root
+#
+#RUN microdnf install dnf && \
+#    dnf -y update-minimal --security --sec-severity=Important --sec-severity=Critical && \
+#    dnf clean all && \
+#    rpm -e  --nodeps dnf && \
+#    microdnf clean all && \
+#    rm -rf /var/cache/yum && \
+#    rm -rf /var/cache/dnf
+#
 
-RUN microdnf install yum && \
-    yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical && \
-    yum clean all && \
-    microdnf remove yum && \
-    microdnf clean all && \
-    rm --recursive --force /var/cache/yum
-
-
+#Alternative 1
 #RUN chown -R 1001:0 /deployments && \
 #    chmod -R g=u /deployments
 
+#Alternative 2
 #RUN chgrp -R 0 /deployments && \
-#   chmod -R g=u /deployments
+#   chmod -R g=u /deployments && \
+#   chown -R 1001:0 /deployments
 
-USER 1001
 
-#RUN chown -R 1001:0 /deployments
-
+#USER 1001

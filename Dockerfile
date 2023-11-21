@@ -14,8 +14,13 @@ COPY --from=builder /tmp/src/target/*.jar /deployments/
 
 USER root
 
-RUN dnf -y update-minimal --security --sec-severity=Important --sec-severity=Critical && \
-    dnf clean all
+RUN microdnf install yum && \
+    yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical && \
+    yum clean all && \
+    microdnf remove yum && \
+    microdnf clean all && \
+    rm --recursive --force /var/cache/yum
+
 
 #RUN chown -R 1001:0 /deployments && \
 #    chmod -R g=u /deployments

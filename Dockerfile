@@ -9,7 +9,7 @@ RUN mvn package
 FROM registry.access.redhat.com/ubi8/openjdk-11:1.18 
 
 #USER root
-COPY target/*.jar /deployments/
+COPY --from=builder /tmp/src/target/*.jar /deployments/
 
 #RUN chown -R 1001:0 /deployments && \
 #    chmod -R g=u /deployments

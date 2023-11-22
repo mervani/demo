@@ -162,10 +162,3 @@ spec:
     from:
       kind: DockerImage
       name: registry.access.redhat.com/ubi8/openjdk-11:1.18
-    generation: 2
-    importPolicy:
-      importMode: Legacy
-    name: "1.18"
-    referencePolicy:
-      type: Source
-

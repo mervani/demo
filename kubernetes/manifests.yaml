@@ -1,0 +1,148 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+    argocd.argoproj.io/sync-wave: "-2"
+  creationTimestamp: null
+  labels:
+    app: argocd-pvc
+    app.kubernetes.io/component: argocd-pvc
+    app.kubernetes.io/instance: argocd-pvc
+  name: argocd-pvc
+spec:
+  lookupPolicy:
+    local: false
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+    argocd.argoproj.io/sync-wave: "-1"
+  creationTimestamp: null
+  labels:
+    app: argocd-pvc
+    app.kubernetes.io/component: argocd-pvc
+    app.kubernetes.io/instance: argocd-pvc
+  name: argocd-pvc
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: argocd-pvc:latest
+  postCommit: {}
+  resources: {}
+  source:
+    contextDir: demo
+    git:
+      uri: https://github.com/mervani/demo.git
+    type: Git
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: openjdk-11:1.18
+    type: Docker
+  triggers:
+  - github:
+      secret: y8_Rvurc0z1CaVZ6ttvI
+    type: GitHub
+  - generic:
+      secret: zSI68XOL-L-aG_tLFSbA
+    type: Generic
+  - type: ConfigChange
+  - imageChange: {}
+    type: ImageChange
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"argocd-pvc:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"argocd-pvc\")].image"}]'
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: null
+  labels:
+    app: argocd-pvc
+    app.kubernetes.io/component: argocd-pvc
+    app.kubernetes.io/instance: argocd-pvc
+  name: argocd-pvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: argocd-pvc
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        deployment: argocd-pvc
+    spec:
+      volumes:
+        - name: pvc
+          persistentVolumeClaim:
+              claimName: mypvc
+      containers:
+      - image: ' '
+        name: argocd-pvc
+        volumeMounts:
+            - name: pvc
+              mountPath: /deployments/pvc
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        - containerPort: 8778
+          protocol: TCP
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: null
+  labels:
+    app: argocd-pvc
+    app.kubernetes.io/component: argocd-pvc
+    app.kubernetes.io/instance: argocd-pvc
+  name: argocd-pvc
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  - name: 8778-tcp
+    port: 8778
+    protocol: TCP
+    targetPort: 8778
+  selector:
+    deployment: argocd-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  storageClassName: gp3-csi
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+

@@ -134,6 +134,7 @@ metadata:
   name: mypvc
   annotations:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   storageClassName: gp3-csi
   accessModes:

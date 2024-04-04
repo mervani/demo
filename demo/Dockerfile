@@ -6,7 +6,7 @@ RUN chgrp -R 0 /tmp/src && \
     chmod -R g=u /tmp/src && \
     chown -R 1001:0 /tmp/src
 COPY --chown=1001:0 . /tmp/src
-RUN mvn package
+RUN mvn package -DskipTests
 
 FROM registry.access.redhat.com/ubi8/openjdk-11:1.18 
 

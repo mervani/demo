@@ -1,0 +1,1 @@
+helm template . --set-file files."a\.properties"=config/a.properties --set-file files."a\.yaml"=config/a.yaml

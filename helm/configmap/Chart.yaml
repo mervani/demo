@@ -5,5 +5,5 @@ version: 1.0.0
 kubeVersion: '>=1.14.6'
 dependencies:
   - name: "configmap"
-    version: "1.0.0"
+    version: "1.0.1"
     repository: "oci://quay.io/rhn_gps_mileri/helm"

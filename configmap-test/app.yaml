@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: configmap-test
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: configmap-test
+    server: 'https://kubernetes.default.svc'
+  project: default
+  sources:
+    - chart: configmap
+      helm:
+        fileParameters:
+          - name: files."app\.config"
+            path: $values/app.conf
+        releaseName: configmap-test
+        valueFiles:
+          - $values/configmap-test/values.yaml
+      repoURL: quay.io/rhn_gps_mileri/helm
+      targetRevision: 1.0.0
+    - ref: values
+      repoURL: 'https://github.com/mervani/demo.git'
+      targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    managedNamespaceMetadata:
+      annotations:
+        annotations: on-the-namespace
+        applies: for
+        the: same
+      labels:
+        any: label
+        you: like
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m0s
+      limit: 5
+    syncOptions:
+      - CreateNamespace=true

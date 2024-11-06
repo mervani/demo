@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: configmap-test-2
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: configmap-test-2
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    helm:
+      fileParameters:
+        - name: configmap.files."b\.properties"
+          path: /configmap-test/config/b.properties
+      valueFiles:
+        - /test-helm/values.yaml
+    path: helm/configmap
+    repoURL: 'https://github.com/mervani/demo.git'
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    managedNamespaceMetadata:
+      annotations:
+        annotations: on-the-namespace
+        applies: for
+        the: same
+      labels:
+        any: label
+        you: like
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m0s
+      limit: 5
+    syncOptions:
+      - CreateNamespace=true

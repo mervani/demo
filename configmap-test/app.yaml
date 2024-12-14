@@ -13,7 +13,7 @@ spec:
       helm:
         fileParameters:
           - name: files."app\.config"
-            path: $values/app.conf
+            path: $values/configmap-test/config/app.yaml
         releaseName: configmap-test
         valueFiles:
           - $values/configmap-test/values.yaml

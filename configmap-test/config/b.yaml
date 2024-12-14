@@ -1,2 +1,5 @@
 hello:
   world: true
+
+test:
+  test: test

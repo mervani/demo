@@ -2,5 +2,5 @@ configmap:
   image:
     repository: 'image-registry.openshift-image-registry.svc:5000/openshift/httpd'
     tag: latest
-  livenessProbe: null
-  readinessProbe: null
+  livenessProbe: {}
+  readinessProbe: {}

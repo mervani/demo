@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tenant-deployer
+spec:
+  generators:
+    - git:
+        files:
+          - path: tenants/config.yaml
+        repoURL: 'https://github.com/mervani/demo.git'
+        revision: HEAD
+        requeueAfterSeconds: 30
+  goTemplate: true
+  template:
+    metadata:
+      name: 'tenants-{{.name}}'
+    spec:
+      destination:
+        server: 'https://kubernetes.default.svc'
+      project: default
+      source:
+        path: '{{if .tenantPath}}{{.tenantPath}}{{else}}tenants/{{.name}}{{end}}'
+        repoURL: 'https://github.com/mervani/demo.git'
+        targetRevision: HEAD
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

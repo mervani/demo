@@ -1,3 +1,1 @@
-- name: tenant1
-- name: tenant2
-  tenantPath: tenants/mytenant
+- tenantName: tenant1
